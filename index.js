@@ -64,12 +64,12 @@ app.get('/new', (req, res) => {
     res.sendFile(__dirname + '/btns.html');
   });
 
-  arduino.on("open", () => {
+  /*arduino.on("open", () => {
     console.log('serial port open');
   });
   parser.on('data', data=>{
       //console.log(data);
-  })
+  })*/
 
 
 io.on('connection', (socket) =>{
@@ -165,13 +165,14 @@ socket.on('newBytes', sendallBytes);
             
 
         }*/
+        /*
         function ser(dat){
             arduino.write(dat)
         }
         function sendByte(bite){
             arduino.write(bite);
         }
-
+*/
 
 
 http.listen(portus, () => {
