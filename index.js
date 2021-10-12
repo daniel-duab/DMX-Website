@@ -1,5 +1,7 @@
 const app = require('express')();
 
+const i2c = require("i2c-bus");
+
 const http = require('http').Server(app); 
 
 const io = require('socket.io')(http); 
@@ -10,12 +12,12 @@ const fs = require('fs');
 
 const portus = process.env.PORT || 25656; 
 
-const SerialPort = require("serialport"); 
-var arduino = new SerialPort("/dev/cu.usbserial-14140", 9600);
+//const SerialPort = require("serialport"); 
+//var arduino = new SerialPort("/dev/cu.usbserial-14140", 9600);
 
-let Readline = SerialPort.parsers.Readline; 
-let parser = new Readline(); 
-arduino.pipe(parser); 
+//let Readline = SerialPort.parsers.Readline; 
+//let parser = new Readline(); 
+//arduino.pipe(parser); 
 
 let ids = [];
 let ons = [];
@@ -99,7 +101,7 @@ socket.on('pause', ()=>{
         
         sliders.unshift(newSlider);
         io.emit('sliders', sliders);
-        sendallBytes();
+        //sendallBytes();
         
     });
     
@@ -108,7 +110,7 @@ socket.on('pause', ()=>{
             console.log("n: " + l[0] + "   v: " + l[1] + "  id: " + l[2])
             sliders[l[0]][2] = l[1]
             io.emit('nsliders', sliders, l[2]);
-            sendallBytes();
+            //sendallBytes();
         }
         
         
@@ -124,6 +126,8 @@ socket.on('newBytes', sendallBytes);
             
         })
     });
+    /* THIS FUNCTION NEEDS TO BE REFACTORED FOR I2C INSTEAD OF THE UART SERIAl I WAS USING BEFORE!!!
+
     function sendallBytes(){
         
         for(i=0; i<sliders.length; i++){
@@ -160,7 +164,7 @@ socket.on('newBytes', sendallBytes);
         clons()
             
 
-        }
+        }*/
         function ser(dat){
             arduino.write(dat)
         }
@@ -173,3 +177,6 @@ socket.on('newBytes', sendallBytes);
 http.listen(portus, () => {
     console.log(`server running at http://localhost:${portus}/`);
   });
+
+i2c.open(0x40)
+
