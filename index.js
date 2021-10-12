@@ -115,7 +115,7 @@ socket.on('pause', ()=>{
         
         
     });
-socket.on('newBytes', sendallBytes);
+//socket.on('newBytes', sendallBytes);
     socket.on('delSlider', (data)=>{
             for(i=0; i<sliders[data][1].length; i++){
                 var sendDat = sliders[data][1][i] + 'c0v'
