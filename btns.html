@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+    <style>
+       
+    </style>
+
+<script src="/socket.io/socket.io.js"></script>
+    <body>
+    <p id="errors" style="color: red;"></p>
+    <p id="success" style="color: chartreuse;"></p>
+        <button id="btnPreview"></button>
+        <div id="sliders">
+            <!-- <input id="min" placeholder="min" value="0"> -->
+            <!-- <input id="max" placeholder="max" value="255"> -->
+            <input id="channels" placeholder="channels 1-512" value="">
+            <input id="values" placeholder="values 1-255" value="">
+        </div>
+
+        <button id="newB">New Button</button>
+        
+        
+        <script>
+            var erres = false;
+            var socket = io();
+            function preview(){
+                //const min = document.getElementById('min').textContent;
+                // const max = document.getElementById('max').textContent;
+                var channels = document.getElementById('channels').value;
+                var values = document.getElementById('values').value;
+                
+                        var num = channels.split(' ');
+                        channels = num;
+                        erres = false;
+                        for(i=0; i<channels.length; i++){
+                            channels[i] = parseInt(channels[i])
+                            if (channels[i] >512){channels[i] = 512}
+                        }
+                        var vnum = values.split(' ');
+                        values = vnum;
+                        for(i=0; i<values.length; i++){
+                            values[i] = parseInt(values[i])
+                            if (values[i] >255){values[i] = 255}
+                        }
+                        
+                
+                
+                
+                var title = document.getElementById('title').value.toString();
+                var val = document.getElementById('previewSlider').value;
+             //document.getElementById('previewSlider').min = min
+             //document.getElementById('previewSlider').max = max
+             document.getElementById('channelsPreview').innerHTML = channels
+             document.getElementById('titlePreview').innerHTML = title
+             document.getElementById('valuePreview').innerHTML = val
+
+                
+            }
+
+            setInterval(preview, 1)
+            socket.on('id', (id)=>{
+                const idn = id;
+                socket.emit('estMK', idn);
+            });
+            function addSlider(){
+                
+                var btn = [title.value, channels.value, values.value];
+                console.log(btn);
+                socket.emit('newBtn', (btn))
+            
+            }
+            
+        </script>
+        
+    </body>
+</html>
