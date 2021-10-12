@@ -1,6 +1,6 @@
 const app = require('express')();
 
-const i2c = require("i2c-bus");
+//const i2c = require("i2c-bus");
 
 const http = require('http').Server(app); 
 
