@@ -178,5 +178,4 @@ http.listen(portus, () => {
     console.log(`server running at http://localhost:${portus}/`);
   });
 
-i2c.open(0x40)
 
