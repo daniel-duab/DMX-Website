@@ -1,7 +1,7 @@
 const app = require('express')();
 
 const i2c = require("i2c-bus");
-let bus = i2c.open(0x50, (e)=>{throw e});
+let bus = i2c.open(0x50, (e)=>{console.log(e)});
 
 
 const http = require('http').Server(app); 
