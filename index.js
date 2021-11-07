@@ -1,5 +1,7 @@
 const app = require('express')();
 
+const Buffer = require('buffer');
+
 const i2c = require("i2c-bus");
 
 let bus = i2c.open(0x50, (e)=>{console.log(e)});
@@ -113,7 +115,8 @@ socket.on('pause', ()=>{
             console.log("n: " + l[0] + "   v: " + l[1] + "  id: " + l[2])
             sliders[l[0]][2] = l[1]
             io.emit('nsliders', sliders, l[2]);
-            bus.i2cWrite(4, 'HEY'.length, 'HEY');
+            var buffer  = Buffer.from("sup :)", "utf-8")
+            bus.i2cWrite(4, buffer.length, buffer);
             //sendallBytes();
         }
         
