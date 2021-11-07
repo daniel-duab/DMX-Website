@@ -114,7 +114,7 @@ socket.on('pause', ()=>{
             sliders[l[0]][2] = l[1]
             io.emit('nsliders', sliders, l[2]);
             var buffer  = Buffer.from("sup :)", 'utf-8')
-            bus.i2cWrite(4, buffer.length, buffer, (e)=>{console.log(buffer, e)});
+            bus.i2cWrite(0x04, buffer.length, buffer, (e)=>{console.log(buffer, e)});
             //sendallBytes();
         }
         
