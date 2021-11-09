@@ -1,10 +1,5 @@
 const app = require('express')();
 
-const i2c = require("i2c-bus");
-
-let bus = i2c.open(0x20, (e)=>{console.log(e)});
-
-
 const http = require('http').Server(app); 
 
 const io = require('socket.io')(http); 
@@ -15,12 +10,12 @@ const fs = require('fs');
 
 const portus = process.env.PORT || 25656; 
 
-//const SerialPort = require("serialport"); 
-//var arduino = new SerialPort("/dev/cu.usbserial-14140", 9600);
+const SerialPort = require("serialport"); 
+var arduino = new SerialPort("/dev/cu.usbserial-14140", 9600);
 
-//let Readline = SerialPort.parsers.Readline; 
-//let parser = new Readline(); 
-//arduino.pipe(parser); 
+let Readline = SerialPort.parsers.Readline; 
+let parser = new Readline(); 
+arduino.pipe(parser); 
 
 let ids = [];
 let ons = [];
@@ -67,12 +62,12 @@ app.get('/new', (req, res) => {
     res.sendFile(__dirname + '/btns.html');
   });
 
-  /*arduino.on("open", () => {
+  arduino.on("open", () => {
     console.log('serial port open');
   });
   parser.on('data', data=>{
       //console.log(data);
-  })*/
+  })
 
 
 io.on('connection', (socket) =>{
@@ -104,7 +99,7 @@ socket.on('pause', ()=>{
         
         sliders.unshift(newSlider);
         io.emit('sliders', sliders);
-        //sendallBytes();
+        sendallBytes();
         
     });
     
@@ -113,14 +108,12 @@ socket.on('pause', ()=>{
             console.log("n: " + l[0] + "   v: " + l[1] + "  id: " + l[2])
             sliders[l[0]][2] = l[1]
             io.emit('nsliders', sliders, l[2]);
-            var buffer  = Buffer.from("sup :)", 'utf-8')
-            bus.i2cWrite(0x0, buffer.length, buffer, (e)=>{console.log(buffer, e)});
-            //sendallBytes();
+            sendallBytes();
         }
         
         
     });
-//socket.on('newBytes', sendallBytes);
+socket.on('newBytes', sendallBytes);
     socket.on('delSlider', (data)=>{
             for(i=0; i<sliders[data][1].length; i++){
                 var sendDat = sliders[data][1][i] + 'c0v'
@@ -131,8 +124,6 @@ socket.on('pause', ()=>{
             
         })
     });
-    /* THIS FUNCTION NEEDS TO BE REFACTORED FOR I2C INSTEAD OF THE UART SERIAl I WAS USING BEFORE!!!
-
     function sendallBytes(){
         
         for(i=0; i<sliders.length; i++){
@@ -169,19 +160,16 @@ socket.on('pause', ()=>{
         clons()
             
 
-        }*/
-        /*
+        }
         function ser(dat){
             arduino.write(dat)
         }
         function sendByte(bite){
             arduino.write(bite);
         }
-*/
+
 
 
 http.listen(portus, () => {
     console.log(`server running at http://localhost:${portus}/`);
   });
-
-
