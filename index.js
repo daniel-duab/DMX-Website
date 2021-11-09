@@ -2,7 +2,7 @@ const app = require('express')();
 
 const i2c = require("i2c-bus");
 
-let bus = i2c.open(0x50, (e)=>{console.log(e)});
+let bus = i2c.open(0x20, (e)=>{console.log(e)});
 
 
 const http = require('http').Server(app); 
@@ -114,7 +114,7 @@ socket.on('pause', ()=>{
             sliders[l[0]][2] = l[1]
             io.emit('nsliders', sliders, l[2]);
             var buffer  = Buffer.from("sup :)", 'utf-8')
-            bus.i2cWrite(0x04, buffer.length, buffer, (e)=>{console.log(buffer, e)});
+            bus.i2cWrite(0x0, buffer.length, buffer, (e)=>{console.log(buffer, e)});
             //sendallBytes();
         }
         
