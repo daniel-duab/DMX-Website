@@ -1,0 +1,7 @@
+{
+    "configuration": "cpu=atmega328",
+    "board": "arduino:avr:nano",
+    "programmer": "arduino:avrisp",
+    "port": "/dev/cu.iPad-WirelessiAPv2",
+    "sketch": "Serial-DMX.ino"
+}
