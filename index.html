@@ -1,36 +1,61 @@
 <!DOCTYPE html>
 <html>
-    
     <head>
-    <link rel="stylesheet" type="text/css" href="./slide.css">
-    <style>
-        .slide{
-            -webkit-appearance: slider-vertical;
-            height: 255px;
-            width: 8px;
-            float: left;
-        }
-    </style>
-    <style>
-        .titles{
-            display: inline-block;
-        }
-        .cont{
-            display: inline-block;
-        }
-    </style>
-    
+        <link rel="stylesheet" href="styles/mainPage.css" type="text/css">
     </head>
-<script src="/socket.io/socket.io.js"></script>
-    <body id="boo">
-        <!-- <input type="range" onmouseover="" onmouseout=""> -->
-        <button onclick="socket.emit('newBytes'); socket.emit('pause')">Update</button>
-        <!-- <button>Blackout</button> -->
-        <div id = 'lightboard'>
+    <body class="basic-back">
+        <script src="/js/canvas.js" type="module"></script>
+        <script src="/js/setSetting.js"></script>
+        <div class="stage" id="stage">
+        
+        </div>
+        <div class="menu-bar">
+            <button>Boxes</button>
+            <button>Lights</button>
+            <button>Cues</button>
+            <button>Other</button>
+            <button id="favorite-1">Fav1</button>
+            <button id="favorite-2">Fav2</button>
+            <button id="favorite-3">Fav3</button>
+            <button id="favorite-4">Fav4</button>
+        </div>
+        <div class="title-bar">
+
+        </div>
+        <div class="settings-box">
+            <p class="setting-object">Name</p>
+
+            <p class="setting-header">Position</p>
+            <p class="setting-label">X</p>
+            <input type="number" class='setting' min='0' max='1000'>
+            <p class="setting-label">Y</p>
+            <input type="number" class='setting' min='0' max='1000'>
+            <p class="setting-label">Z</p>
+            <input type="number" class='setting' min='0' max='1000'>
             
-            
+            <p class="setting-header">Dimension</p>
+            <p class="setting-label">X</p>
+            <input type="number" class='setting' min='0' max='1000'>
+            <p class="setting-label">Y</p>
+            <input type="number" class='setting' min='0' max='1000'>
+            <p class="setting-label">Z</p>
+            <input type="number" class='setting' min='0' max='1000'>
+
+            <p class="setting-header">Rotation</p>
+            <p class="setting-label">X</p>
+            <input type="number" class='setting' min='0' max='1000'>
+            <p class="setting-label">Y</p>
+            <input type="number" class='setting' min='0' max='1000'>
+            <p class="setting-label">Z</p>
+            <input type="number" class='setting' min='0' max='1000'>
+
+            <p class="setting-header">Color</p>
+            <input type="color">
+
         </div>
         
-        <script src="main.js"></script>
-        </body>
-    </html>
+
+
+
+    </body>
+</html>
