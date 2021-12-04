@@ -23,12 +23,6 @@
     "i2c-bus": "^5.2.2",
     "serialport": "^9.2.4",
     "socket.io": "^1.7.4",
-    "socketio": "^1.0.0",
-    "three": "^0.77.0",
-    "three.js": "^0.77.0",
-    "ts-node": "^10.4.0"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.15"
+    "socketio": "^1.0.0"
   }
 }
