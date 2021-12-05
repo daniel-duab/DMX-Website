@@ -14,6 +14,7 @@ import {scene} from "./canvas.mjs"
 import {socket} from "./sockets.mjs"
 let boxes = {};
 
+
 function closeSettings(){
     clearInterval(updateBoxProperties);
     document.getElementById('settings-box').innerHTML = ""
