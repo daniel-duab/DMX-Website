@@ -38,27 +38,40 @@ app.get('/', (req, res) => {
 
 
 
-
 io.on('connection', (socket) =>{
+  fs.readFile('./db/scene.json', (err, data)=>{
+    try{
+      socket.emit('scene-return', JSON.parse(data))
+    }catch{
+      socket.emit('fuck! an error happened!')
+    }
+  });
   console.log(socket.id)
     socket.on('scene-change', (obje)=>{
-      console.log('intop')
-      fs.readFile('./db/scene.json', (err, data)=>{
+      fs.readFile('./db/scene.json', 'utf8', (err, data)=>{
         //get the data
         try{
         let update = JSON.parse(data);
         //nav to actual scene
-        //console.log(update.object)
+
         // iterate through childrem
+        let ifNew = true;
         for (let i = 0; i<update.object.children.length; i++){
           // set the child val to the updated sent val
             let childName = update.object.children[i].name;
-            console.log('cn' + childName + JSON.stringify(obje))
-            if (childName === obje.name){
+            if (childName === obje.object.name){
               update.object.children[i] = obje;
-              fs.writeFile('./db/scene.json', update, 'utf-8', (err)=>{});
-              socket.emit('scene-update', (update))
-              console.log('success ' + update)
+              fs.writeFile('./db/scene.json', JSON.stringify(update), 'utf-8', (err)=>{console.log('oobj update')});
+              socket.broadcast.emit('scene-update', (update))
+              
+              ifNew = false
+            }else if(ifNew){
+              update.object.children[i] = obje;
+              
+              fs.writeFile('./db/scene.json', JSON.stringify(update), 'utf-8', (err)=>{console.log('nobj update')});
+              socket.broadcast.emit('scene-add', (update))
+              
+              
             }
             //write it back to json file
             
@@ -66,13 +79,13 @@ io.on('connection', (socket) =>{
         }catch (errer){
 
           socket.emit('request-full-scene')
-          console.log('err in chang ' + errer)
+          console.error(errer);
         }
       })
     })
     socket.on('full-scene', (scene)=>{
       fs.writeFile('./db/scene.json', JSON.stringify(scene), 'utf-8', (err)=>{console.log('fs')});
-      socket.emit('scene-update', JSON.stringify(scene))
+      io.emit('scene-update', JSON.stringify(scene))
     });
     socket.on('scene-get', ()=>{
       fs.readFile('./db/scene.json', (err, data)=>{
@@ -81,9 +94,8 @@ io.on('connection', (socket) =>{
         }catch{
           socket.emit('fuck! an error happened!')
         }
-        
       });
-    })
+    });
 });
 
 
