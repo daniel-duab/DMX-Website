@@ -4,36 +4,96 @@
         <link rel="stylesheet" href="styles/mainPage.css" type="text/css">
     </head>
     <body class="basic-back">
-
-        <script src="/socket.io/socket.io.js."></script>
-        <script src="/js/canvas.mjs" type="module"></script>
-        <script src="/js/boxFoundation.mjs" type="module"></script>
-        <script src="/js/other.mjs" type="module"></script>
-        <script src="/js/sockets.mjs" type="module"></script>
-        <script>
-          
-        </script>
+        <script src="/js/addShit.js"></script>
+        <script src="/js/otros.js"></script>
         
-        <div class="stage" id="stage">
-        
-        </div>
         <div class="menu-bar">
  
-            
-            <button onclick="newBox(document.getElementById('inBox').value)">Boxes</button>
-            <button>Lights</button>
-            <button>Cues</button>
-            <button>Other</button>
-            <button id="favorite-1">Fav1</button>
-            <button id="favorite-2">Fav2</button>
-            <button id="favorite-3">Fav3</button>
-            <button id="favorite-4">Fav4</button>
-            <input type="text" placeholder="name" id="inBox">
         </div>
         <div class="title-bar">
 
         </div>
-        <div class="settings-box" id="settings-box">
+        <div class="settings-box" id="w">
+            <div class="settings-header">
+                <h3>Light Panels</h3>
+                <div class="add">
+                    <input  placeholder="add panel" type="text" id="newLightPanelNameInputBox" width="10">
+                    <button onclick="addPanel(this.parentElement.getElementsByTagName('input').item(0).value)">+</button>
+                    <p onclick="this.hidden = true">error</p>
+                </div>
+                
+            </div>
+            <!-- light panel -->
+            <div folded=false class="light-panel"> <!-- panelDiv -->
+                <div class="panel-header"> <!-- headerDiv -->
+                    <object class="data" hidden>
+                        {
+                            "folded":false,
+                            "name":"cool"
+                        }
+                    </object>
+                    <div class="panel-top-words"> <!-- topWordsDiv -->
+                        <button onclick="fold(this.parentElement.parentElement.parentElement, this)" id="folding-button">▼</button> <!-- foldButton -->
+                        <h1>Light Panel Name </h1> <!-- heading1 -->
+                        <p>(selected)</p> <!-- selected -->
+                    </div>
+                        
+                    
+                    
+                    <div class="add"> <!-- addDiv -->
+                        <input type="text" id="newLightNameInputBox" placeholder="add light"> <!-- addNameInput -->
+                        <button onclick="addLight()">+</button> <!-- addButton -->
+                        <p onclick="this.hidden = true">error</p>
+                    </div>
+                    
+                </div>
+                <!-- light -->
+                <div class="light-file"> <!-- lightDiv -->
+                    <div class="light-heading"> <!-- headingDiv -->
+                        <h2>Center Stage</h2><!-- heading2 -->
+                        <button>-</button><!-- deleteButton -->
+                    </div>
+                    
+                    <div class="add"><!-- addDiv -->
+                        <input placeholder="add param" type="text"><!-- addNameInput -->
+                        <input placeholder="ch" type="text" style="width: 20%;"> <!-- addChannelInput -->
+                        <button class="add">+</button><!-- addButton -->
+                        <p onclick="this.hidden = true">error</p>
+                    </div>
+                    
+                    <div class="params"><!-- paramsDiv -->
+                        <!-- param -->
+                        <div class="light-file-setting"><!-- singelSettingDiv -->
+                            <p>brightness<a class="devOption">(D5)</a><!-- channelDev -->:<input class="light-file-setting" type="range" max="255" min="0" value="255"><!-- valueSlider --></p><!-- paramName -->
+                        </div>
+                        <!-- end param -->
+                    </div>
+                    
+                </div>
+                <div class="light-file"> <!-- lightDiv -->
+                    <h2>Center Stage<button>-</button><!-- deleteButton --></h2><!-- heading -->
+                    <div class="add"><!-- addDiv -->
+                        <input placeholder="add param" type="text"><!-- addNameInput -->
+                        <input placeholder="ch" type="text" style="width: 20%;"> <!-- addChannelInput -->
+                        <button class="add">+</button><!-- addButton -->
+                    </div>
+                    
+                    <div class="params"><!-- paramsDiv -->
+                        <!-- param -->
+                        <div class="light-file-setting"><!-- singelSettingDiv -->
+                            <p>brightness<a class="devOption">(D5)</a><!-- channelDev -->:<input class="light-file-setting" type="range" max="255" min="0" value="255"><!-- valueSlider --></p><!-- paramName -->
+                        </div>
+                        <!-- end param -->
+                    </div>
+                    
+                </div>
+                <!-- end light -->
+                
+                </div>
+                <!-- end panel -->
+
+            </div>
+            
             
 
         </div>

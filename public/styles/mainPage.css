@@ -1,13 +1,8 @@
 .basic-back {
     background: gray;
 }
-.render {
-    padding: 0%;
-    margin: 0.3%;
-    position: absolute;
-    right: 0%;
-    bottom: 0%;
-    border: 2px black solid; 
+body {
+    font-family: monospace;
 }
 .menu-bar button {
     margin: 0%;
@@ -37,73 +32,6 @@
     color: black;
 }
 
-.settings-box {
-    margin: 0.5%;
-    padding: 0%;
-    position: absolute;
-    left: 0%;
-    bottom: 0%;
-    outline: 2px black solid;
-    background-color: darkgray;
-    height: 75.1%;
-    width: 18%;
-    overflow:scroll;
-}
-.setting-label {
-    float: left;
-    position: relative;
-    font-size: auto;
-    font-family: monospace;
-    margin: 5%;
-    padding-top: 0%;
-    padding-bottom: 0%;
-    left: 0%;
-    max-width: 40%;
-    width: 25%;
-    font-size: 300%;
-    margin-right: 0%;
-    margin-left: 10%;
-}
-.setting-header {
-    position: relative;
-    font-size: auto;
-    font-family: monospace;
-    margin: 1%;
-    padding-top: 0%;
-    padding-bottom: 0%;
-    left: 0%;
-    max-width: 40%;
-    width: 25%;
-    font-size: 200%;
-    font-weight: bold;
-}
-.setting-object {
-    float: left;
-    position: relative;
-    font-size: auto;
-    font-family: monospace;
-    margin: 5%;
-    padding-top: 0%;
-    padding-bottom: 0%;
-    left: 0%;
-    max-width: 40%;
-    width: 25%;
-    font-size: 400%;
-    font-weight: bolder;
-}
-
-.x-button {
-    outline: none;
-    background-color: rgb(122, 122, 122);
-    font-family: monospace;
-    font-size: 200%;
-    position: absolute;
-    right: 7%;
-    padding-block: 2%;
-    padding-inline: 7%;
-    top: 3%;
-}
-
 .setting {
     outline: none;
     padding-left: 4%;
@@ -119,27 +47,191 @@
     max-width: 55%;
     right: 0;
     
-}/*
-input[type=number] .setting:hover::-webkit-inner-spin-button{
-    width: 122px
-}*/
-input[type="number"].setting::-webkit-outer-spin-button, 
-input[type="number"].setting::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    background: rgb(105, 105, 105);
-    width: 100%;
-    border-left: none;
-    opacity: 0; /* shows Spin Buttons per default (Chrome >= 39) */
+}
+.settings-box {
+    margin: 0.5%;
+    padding: 0%;
     position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
+    left: 0%;
+    bottom: 0%;
+    outline: 2px black solid;
+    background-color: darkgray;
+    height: 75.1%;
+    width: 28%;
+    overflow:scroll;
 }
-input[type="number"].setting::-webkit-inner-spin-button:hover,
-input[type="number"].setting::-webkit-inner-spin-button:active{
+
+.light-panel{
+    margin: 1%;
+    padding: 1%;
+    border: black 2px solid;
+}
+.panel-top-words h1{
+    font-weight: bolder;
+    font-size: larger;
+    margin: 0%;
+    padding: 0%;
+    display: inline;
+}
+.panel-top-words p{
+    font-weight: normal;
+    font-size: small;
+    color: rgb(0, 82, 18); 
+    display: inline;
+}
+
+.light-panel input{
+    font-family: monospace;
+    background-color: darkgray;
+    border: none;
+    outline: none;
+    color: gray;
+    display: inline;
+    width: 50%;
+}
+.light-panel button{
+    font-family: monospace;
+    background-color: darkgray;
+    border: none;
+    outline: none;
+    color: gray;
+    border-radius: 30%;
+}
+.light-panel button:hover{
+    transition: 20ms;
+    background-color: rgb(189, 189, 189);
+}
+
+.light-file{
+    float: inline-end;
+    outline: 3px black double;
+    margin: 2%;
+}
+.light-file button{
+    margin-left: 4%;
+}
+.light-file h2{
+    font-size: inherit;
+    margin-top: 0%;
+    font-weight: 20px;
+    margin: 1%;
+}
+.light-file p{
+    text-decoration: black;
+    font-family: monospace;
+    margin: 2%;
+}
+.light-heading h2{
+    display: inline;
+}
+.light-heading button{
+    margin-block: 2%;
+}
+
+.add button{
+    font-family: monospace;
+    background-color: darkgray;
+    border: none;
+    outline: none;
+    color: gray;
+    display: inline-block;
+    border-radius: 30%;
+}
+.add button:hover{
+    transition: 20ms;
+    background-color: rgb(189, 189, 189);
+}
+.add2 input{
+    font-family: monospace;
+    background-color: darkgray;
+    border: none;
+    outline: none;
+    color: gray;
+    display: inline;
+    width: 20%;
+    margin: 0%;
+}
+.add input{
+    font-family: monospace;
+    background-color: darkgray;
+    border: none;
+    outline: none;
+    color: gray;
+    display: inline;
+    width: 50%;
+    margin: 1%;
+}
+.add p{
+    font-size: xx-small;
+    margin-block: none;
+}
+
+
+.light-file-setting input[type=range] {
+    -webkit-appearance: none;
+    margin: 1% 0;
+    width: 100%;
+}
+.light-file-setting input[type=range]::-webkit-slider-thumb{ 
+    -webkit-appearance: none;
+    appearance: none;
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    border: 1px solid #000000;
+    height: 16px;
+    width: 32px;
+    border-radius: 3px;
+    background-image: url(https://www.pngall.com/vertical-line-png);
+    background: #c0c0c0;
+    cursor: grab;
+}
+.light-file-setting input[type=range]::-webkit-slider-runnable-track{               
+  border: 1px solid #000000;
+  height: 100%;
+  width: 16px;
+  border-radius: 3px;
+  background: #ffffff;
+
+  background-color: rgb(105, 105, 105);
+  cursor: pointer;
+}
+
+
+
+.panel-header{
     
-    opacity: 0;
 }
+.settings-header h3{
+    font-size: 200%;
+    font-family: monospace;
+    font-weight: 9999999;
+    margin: 2%;
+    margin-top: 2%;
+}
+.settings-header input{
+    font-family: monospace;
+    background-color: darkgray;
+    border: none;
+    outline: none;
+    color: gray;
+    display: inline;
+    width: 50%;
+    margin: 2%;
+}
+.settings-header button{
+    font-family: monospace;
+    background-color: darkgray;
+    border: none;
+    outline: none;
+    color: gray;
+    display: inline-block;
+    border-radius: 30%;
+}
+.settings-header button:hover{
+    transition: 20ms;
+    background-color: rgb(189, 189, 189);
+}
+
+
 *p {
     text-decoration: black;
     font-family: monospace;
