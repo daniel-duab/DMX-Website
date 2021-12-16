@@ -29,7 +29,27 @@ var arduino;
 
 
 app.use(express.static(__dirname + "/public"))
+app.use(express.static(__dirname))
 
+
+io.on("connection", (socket)=>{
+    fs.readFile("./scene.json", (err, dat)=>{
+      socket.emit("brandNewLightboard", JSON.parse(dat))
+    })
+    
+    socket.on("newLight", (light)={
+
+    })
+    socket.on("newPanel", (panel)={
+      
+    })
+    socket.on("newParam", (param)={
+      
+    })
+    socket.on("new", (lightboard)={
+      
+    }) 
+})
 
 
 app.get('/', (req, res) => {

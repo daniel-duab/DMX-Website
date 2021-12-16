@@ -1,6 +1,9 @@
 .basic-back {
     background: gray;
 }
+button {
+    cursor:pointer;
+}
 body {
     font-family: monospace;
 }
@@ -166,13 +169,24 @@ body {
     margin-block: none;
 }
 
+.confirmer{
+    background-color: darkgray;
+    padding: 1%;
+    width: fit-content;
+    align-items: center;
+    border: 1px black solid;
+}
+.confirmer button{
+    background-color: gray;
+    border: 1px black solid;
+}
 
-.light-file-setting input[type=range] {
+.param input[type=range] {
     -webkit-appearance: none;
-    margin: 1% 0;
+    margin: 2% 0;
     width: 100%;
 }
-.light-file-setting input[type=range]::-webkit-slider-thumb{ 
+.param input[type=range]::-webkit-slider-thumb{ 
     -webkit-appearance: none;
     appearance: none;
     box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
@@ -184,7 +198,13 @@ body {
     background: #c0c0c0;
     cursor: grab;
 }
-.light-file-setting input[type=range]::-webkit-slider-runnable-track{               
+.param input[type=range]::-webkit-slider-thumb:active{ 
+    cursor: grabbing;
+}
+.param input[type=range]::-webkit-slider-runnable-track:active{
+    cursor: grabbing;
+}
+.param input[type=range]::-webkit-slider-runnable-track{               
   border: 1px solid #000000;
   height: 100%;
   width: 16px;
@@ -192,7 +212,7 @@ body {
   background: #ffffff;
 
   background-color: rgb(105, 105, 105);
-  cursor: pointer;
+  cursor: grab;
 }
 
 
@@ -229,6 +249,15 @@ body {
 .settings-header button:hover{
     transition: 20ms;
     background-color: rgb(189, 189, 189);
+}
+
+.param-slider-div button{
+    display: inline-block;
+    float: right;
+    margin: 2%;
+}
+.param-slider-div p{
+    display: inline-block;
 }
 
 
