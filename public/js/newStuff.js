@@ -1,20 +1,47 @@
-//const { param } = require("express/lib/request")
 
-let sb = document.getElementById("settings-box")
-let lightboard = {}
-socket.on("brandNewLightboard", brandNewLightboard(newLightBoard))
+//const { param } = require("express/lib/request")
+const socket = io()
+let sb, lightboard, ms;
+
+window.addEventListener('load', function () {
+    sb = document.getElementById("settings-box")
+    ms = document.getElementById("main-stage")
+    lightboard = {}
+    socket.emit("fullBoardUpdate")
+    socket.on("brandNewLightboard", (nl)=>{brandNewLightboard(nl)})
+})
+
+
+
 function brandNewLightboard(newLightboard){
-    lightboard = newLightboard
-    for(board of lightboard){
-        sb.appendChild(newBoardHead(board.name))
-        for(panel of board.panels){
+    sb.innerHTML = ""
+    lightboard = newLightboard.lightboard
+    console.log(lightboard)
+    
+    for(let board of Object.keys(lightboard)){ // 
+        
+        board = lightboard["thaBoard"]
+        console.log(board)
+        newBoardHead(board.name)
+        sb.appendChild(newBoardHead(board.name));
+        
+        for(let panel of Object.keys(board.panels)){
+            panel = board.panels[panel]
+            if(!typeof panel == Object) break;
             let curPanel = newPanel(panel.name)
-            for(light of panel.lights){
+            for(let light of Object.keys(panel.lights)){
+                light = panel.lights[light]
+                if(!typeof panel == Object) break;
                 let curLight = newLight(light.name, light.value)
-                for(param in paarameters){
+                
+                for(let param of Object.keys(light.parameters)){
+                    param = light.parameters[param]
+
                     curLight.getElementsByClassName("params").item(0).appendChild(newParameter(param.name, param.channel, param.value))
                 }
-                curPanel.appendChild(curLight)
+                
+                curPanel.getElementsByClassName("lights").item(0).appendChild(curLight)
+                
             }
             sb.appendChild(curPanel)
         }
@@ -22,7 +49,6 @@ function brandNewLightboard(newLightboard){
     }
     
 }
-
 function newBoardHead(name){
     let settingHeadDiv = document.createElement("div")
     settingHeadDiv.setAttribute("class", "settings-header")
@@ -31,7 +57,7 @@ function newBoardHead(name){
     heading3.innerHTML = name
     
     let addDiv = document.createElement("div")
-    addDiv.setAttributeI("class", "add")
+    addDiv.setAttribute("class", "add")
 
     let addNameInput = document.createElement('input')
     addNameInput.placeholder = "add param"
@@ -55,6 +81,8 @@ function newBoardHead(name){
 
     settingHeadDiv.appendChild(heading3)
     settingHeadDiv.appendChild(addDiv)
+
+    console.log(settingHeadDiv)
 
     return settingHeadDiv
 }
@@ -92,9 +120,16 @@ function newPanel(name){
     deleteButton.setAttribute("class", "panel-delete")
     deleteButton.setAttribute("onclick", "deleteElement(this)")
 
+    let selectButton = document.createElement("button")
+    selectButton.innerHTML = "select";
+    selectButton.setAttribute("class", "select-button")
+    selectButton.hidden = true;
+    selectButton.setAttribute("onclick", "selectPanel(this.parentElement.getElementsByClassName('select-text').item(0))")
+    
     let selected = document.createElement("p")
-    selected.hidden = false // true if not selcted!
+    selected.hidden = false; // true if not selcted!
     selected.innerHTML = "(selected)"
+    selected.setAttribute("class", "select-text")
     
     let addDiv = document.createElement("div")
     addDiv.setAttribute("class", "add")
@@ -121,6 +156,7 @@ function newPanel(name){
     topWordsDiv.appendChild(heading1)
     topWordsDiv.appendChild(selected)
     topWordsDiv.appendChild(deleteButton)
+    topWordsDiv.appendChild(selectButton)
 
     addDiv.appendChild(addNameInput)
     addDiv.appendChild(addButton)
@@ -253,6 +289,9 @@ function newParameter(name, channel, value){
     return paramDiv
 
 }
+function newSlider(name, value){
+    // make it look good, future me :)
+}
 function addPanel(name, err){
     let newName = true;
     for(check of document.getElementsByClassName("data")){
@@ -261,8 +300,12 @@ function addPanel(name, err){
         }
         
     }
+
+    
     if(newName){
-        sb.appendChild(newPanel(name));
+        let np = newPanel(name);
+        selectPanel(np.getElementsByClassName("select-text").item(0));
+        sb.appendChild(np);
     }else{
         err.hidden = false
     }
@@ -334,6 +377,33 @@ function confirmer(string){
     let conf = document.getElementById("confirmer")
     conf.getElementsByClassName("confirm-option").item(0).innerHTML=string;
     conf.hidden = false;
+}
+
+
+function selectPanel(elem){
+    let newData;
+    for(e of document.getElementsByClassName('select-text')){
+        //if (e===elem) break;
+        e.setAttribute("style", "display: none")
+        e.hidden = true
+        console.log(e)
+        e.parentElement.getElementsByClassName("select-button").item(0).hidden = false
+        newData = JSON.parse(e.parentElement.parentElement.getElementsByClassName("data").item(0).innerHTML)
+        newData.selected = false
+        e.parentElement.parentElement.getElementsByClassName("data").item(0).innerHTML = JSON.stringify(newData)
+    }
+    elem.hidden = false
+    elem.setAttribute("style", "display: inline")
+    elem.parentElement.getElementsByClassName("select-button").item(0).hidden = true
+    newData = JSON.parse(elem.parentElement.parentElement.getElementsByClassName("data").item(0).innerHTML);
+    newData.selected = true
+    elem.parentElement.parentElement.getElementsByClassName("data").item(0).innerHTML = JSON.stringify(newData)
+    console.log(elem.parentElement.parentElement.parentElement.getElementsBu)
+    /*for(light of Object.keys(elem.parentElement.parentElement.parentElement.getElementsByClassName("lights").item(0).)){
+        light = elem.parentElement.parentElement.parentElement.lights[light]
+        ms.appendChild(newSlider(light.name, light.value))
+    }*/
+    
 }
 //setTimeout(()=>{document.getElementById("settings-box").appendChild(newPanel("jjj"))}, 1000)
 

@@ -16,4 +16,5 @@ EASY PAGE TO CREATE NEW SLIDERS
 EASY BUTTON TO DELETE SLIDER (with a check to make sure you arent deleting something important)
 
 notes
-FRONTEND AND BACKEND LIMIT CHANNEL GROUP CREATION TO 32 CHANNELS!!!
+nope FRONTEND AND BACKEND LIMIT CHANNEL GROUP CREATION TO 32 CHANNELS!!!
+figure out how to efficiently store data on arduino

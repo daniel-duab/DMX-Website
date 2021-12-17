@@ -1,5 +1,4 @@
 
-
 function fold(element, button){
     //let elem = document.getElementById("ee")
     let elementData = JSON.parse(element.getElementsByClassName("data").item(0).innerHTML)

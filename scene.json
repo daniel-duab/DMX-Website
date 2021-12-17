@@ -1,59 +1,36 @@
 {
     "lightboard":{
-        "panels":{
-            "setting-1":{
-                "lights":{
-                    "e":{
-                        "parameters":{
-                            "brightness":{
-                                "name":"brightness",
-                                "value":255,
-                                "channel":20
-                            }
+        "thaBoard":{
+            "panels":{
+                "setting-1":{
+                    "lights":{
+                        "e":{
+                            "parameters":{
+                                "brightness":{
+                                    "name":"brightness",
+                                    "value":255,
+                                    "channel":20
+                                }
+                            },
+                            "value":10,
+                            "name":"e"
                         },
-                        "value":10,
-                        "name":"e"
+                        "ee":{
+                            "parameters":{
+                                "ee":{
+                                    "value":10,
+                                    "name":"ee",
+                                    "channel":1
+                                }
+                            },
+                            "value":10,
+                            "name":"ee"
+                        }
                     },
-                    "ee":{
-                        "parameters":{
-                            "ee":{
-                                "value":10,
-                                "name":"ee",
-                                "channel":1
-                            }
-                        },
-                        "value":10
-                    }
-                    
-                },
-                "name":"e"
-            },
-            "setting-2":{
-                "lights":{
-                    "e":{
-                        "parameters":{
-                            "brightness":{
-                                "name":"brightness",
-                                "value":255,
-                                "channel":20
-                            }
-                        },
-                        "value":10,
-                        "name":"e"
-                    },
-                    "ee":{
-                        "parameters":{
-                            "ee":{
-                                "value":10,
-                                "name":"ee",
-                                "channel":1
-                            }
-                        },
-                        "value":10
-                    }
-                    
+                    "name":"setting-1"
                 }
-            }
+            },
+            "name":"thaBoard"
         }
     }
 }

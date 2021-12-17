@@ -33,21 +33,22 @@ app.use(express.static(__dirname))
 
 
 io.on("connection", (socket)=>{
-    fs.readFile("./scene.json", (err, dat)=>{
-      socket.emit("brandNewLightboard", JSON.parse(dat))
-    })
     
-    socket.on("newLight", (light)={
+  console.log(socket.id)
+    
+    socket.on("newLight", (light)=>{
 
     })
-    socket.on("newPanel", (panel)={
+    socket.on("newPanel", (panel)=>{
       
     })
-    socket.on("newParam", (param)={
+    socket.on("newParam", (param)=>{
       
     })
-    socket.on("new", (lightboard)={
-      
+    socket.on("fullBoardUpdate", (lightboard)=>{
+      fs.readFile("./scene.json", (err, dat)=>{
+        socket.emit("brandNewLightboard", JSON.parse(dat))
+      })
     }) 
 })
 

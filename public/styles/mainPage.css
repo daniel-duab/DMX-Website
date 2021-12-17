@@ -6,6 +6,7 @@ button {
 }
 body {
     font-family: monospace;
+    touch-action:pinch-zoom;
 }
 .menu-bar button {
     margin: 0%;
@@ -61,7 +62,9 @@ body {
     background-color: darkgray;
     height: 75.1%;
     width: 28%;
-    overflow:scroll;
+    overflow-y:scroll;
+    overflow-x: hidden;
+    
 }
 
 .light-panel{
@@ -98,7 +101,7 @@ body {
     border: none;
     outline: none;
     color: gray;
-    border-radius: 30%;
+    border-radius: 3px;
 }
 .light-panel button:hover{
     transition: 20ms;
@@ -138,7 +141,7 @@ body {
     outline: none;
     color: gray;
     display: inline-block;
-    border-radius: 30%;
+    border-radius: 3px;
 }
 .add button:hover{
     transition: 20ms;
@@ -166,7 +169,6 @@ body {
 }
 .add p{
     font-size: xx-small;
-    margin-block: none;
 }
 
 .confirmer{
@@ -264,4 +266,72 @@ body {
 *p {
     text-decoration: black;
     font-family: monospace;
+}
+
+.main-stage {
+    margin: 0%;
+    padding: 0%;
+    width: 70%;
+    border: black solid 2px;
+    height: 75%;
+    right: 0.5%;
+    bottom: 0.5%;
+    position: absolute;
+    background-color: rgb(51, 51, 51);
+    overflow-x:visible;
+    display: inline;
+}
+.slider{
+    align-items: center;
+    block-size: 100%;
+    
+    padding: 0%;
+
+}
+.slider p{
+    text-align: center;
+
+}
+.slider sub{
+    font-family: monospace;
+    margin: 0%;
+    align-self: center;
+}
+ .slider input[type=range] {
+    -webkit-appearance: none;
+    position: relative;
+    margin-inline: -25%;
+    margin-block: 30%;
+    width: 60%;
+    height: 40px;
+    background-color: transparent;
+    transform: rotate(270deg);
+}
+ .slider input[type=range]::-webkit-slider-thumb{ 
+    -webkit-appearance: none;
+    appearance: none;
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    border: 1px solid #000000;
+    height: 100%;
+    width: 10%;
+    border-radius: 3px;
+    background-image: url(https://www.pngall.com/vertical-line-png);
+    background: #c0c0c0;
+    cursor: grab;
+}
+.slider input[type=range]::-webkit-slider-thumb:active{ 
+    cursor: grabbing;
+}
+.slider input[type=range]::-webkit-slider-runnable-track:active{
+    cursor: grabbing;
+}
+.slider input[type=range]::-webkit-slider-runnable-track{               
+  border: 1px solid #000000;
+  height: 100%;
+  width: 16px;
+  border-radius: 5px;
+  background: none;
+
+  background-color: rgb(105, 105, 105);
+  cursor: grab;
 }
