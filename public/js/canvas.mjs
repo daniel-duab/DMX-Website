@@ -89,7 +89,7 @@ const renderer = new WebGLRenderer();
 renderer.setPixelRatio( window.devicePixelRatio );
 const rendWidth = (window.innerWidth * 4) / 5
 const rendHeight = (window.innerHeight * 3) / 5
-document.getElementById("stage").width = rendWidth 
+document.getElementById("stage").width = rendWidth
 document.getElementById("stage").height = rendHeight
 renderer.domElement.id = "canvas";
 renderer.domElement.className = "render";

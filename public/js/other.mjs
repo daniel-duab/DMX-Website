@@ -11,7 +11,7 @@ window.scene = scene;
 window.socket = socket;
 window.clickSettingsBox = clickSettingsBox;
 window.newLight = newLight;
-window.switchView = switchView
+// window.switchView = switchView
 window.deleteIt = function(target){
     closeSettings();
     scene.remove(target)
