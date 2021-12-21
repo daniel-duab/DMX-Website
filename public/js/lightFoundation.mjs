@@ -8,24 +8,39 @@ import {
     PointLight,
     AmbientLight,
     Float16BufferAttribute,
+    SpotLight,
+    ConeBufferGeometry,
+    ConeGeometry,
+    MeshLambertMaterial,
+    SpotLightHelper,
+    Object3D,
+    Light,
   } from "./vendor/three/build/three.module.js";
 
 import {scene} from "./canvas.mjs"
 import {socket} from "./sockets.mjs"
+import { clickSettingsBox, closeSettings } from "./boxFoundation.mjs";
 let lights = {};
+
+function createLight(name){
+    var light = new SpotLight();
+    light.name = name;
+    light.receiveShadow = true;
+    light.castShadow = true;
+    light.shadow.mapSize.width = 1024;
+    light.shadow.mapSize.height = 1024;
+
+    light.shadow.camera.near = 500;
+    light.shadow.camera.far = 4000;
+    light.shadow.camera.fov = 30;
+    light.castShadow = true;
     
-function createLight(light){
-    var box = new BoxGeometry(1, 1, 1);
-    var mat = new MeshPhongMaterial({ color: "rgb(0, 0, 0)" });
-    var cube = new Mesh(box, mat);
-    cube.name = name;
-    cube.receiveShadow = true;
-    cube.castShadow = true;
-    console.log(cube);
-    scene.add(cube);
+    console.log(light);
+    scene.add(light);
+    scene.add( light.target );
 }
 
-async function box(name){
+async function light(name){
     console.log(scene)
     let nameCheck = false;
     for (let i = 0; i<scene.children.length; i++){
@@ -40,10 +55,10 @@ async function box(name){
     closeSettings();
 
     if(!nameCheck){
-        createPrism(name)
+        createLight(name)
     }
 
-
+    
     let elem = scene.getObjectByName(name);
     let settings = document.getElementById('settings-box')
     settings.setAttribute('onclick', "window.clickSettingsBox()")
@@ -59,35 +74,58 @@ async function box(name){
     xOut.innerHTML = 'x'
     xOut.className = 'x-button'
     xOut.setAttribute('onclick', 'window.closeSettings()')
+    let delButton = document.createElement('button')
+    delButton.id = 'recycle'
+    delButton.innerHTML = '♲'
+    delButton.className = 'recycling'
+    delButton.setAttribute('onclick', "window.deleteIt(scene.getObjectByName(document.getElementsByClassName('setting-object').item(0).id))")
     
     
-    let dimensionHeader = document.createElement('p');
-    dimensionHeader.innerHTML = "Dimensions"
-    dimensionHeader.className = 'setting-header'
-    let dimYLabel = document.createElement('p');
-    dimYLabel.className = 'setting-label'
-    dimYLabel.innerHTML = 'Y'
-    let dimY = document.createElement('input');
-    dimY.id = 'dimY'
-    dimY.className = 'setting'
-    dimY.type = 'number'
-    dimY.value = elem.scale.y
-    let dimXLabel = document.createElement('p');
-    dimXLabel.className = 'setting-label'
-    dimXLabel.innerHTML = 'X'
-    let  dimX = document.createElement('input');
-    dimX.id = 'dimX'
-    dimX.className = 'setting'
-    dimX.type = 'number'
-    dimX.value = elem.scale.x
-    let dimZLabel = document.createElement('p');
-    dimZLabel.className = 'setting-label'
-    dimZLabel.innerHTML = 'Z'
-    let dimZ = document.createElement('input');
-    dimZ.id = 'dimZ'
-    dimZ.className = 'setting'
-    dimZ.type = 'number'
-    dimZ.value = elem.scale.z
+    let miscHeader = document.createElement('p');
+    miscHeader.innerHTML = "Misc"
+    miscHeader.className = 'setting-header'
+    let angleLabel = document.createElement('p');
+    angleLabel.className = 'setting-label'
+    angleLabel.innerHTML = 'a'
+    let angle = document.createElement('input');
+    angle.id = 'angle'
+    angle.className = 'setting'
+    angle.type = 'range'
+    angle.setAttribute("onchange", "document.getElementById('pangle').value = Math.pow(2, -this.value+1)")
+    angle.min = 1 // was acting funny with <1/>0
+    angle.max = 8 // actually 2 because when reading value i take log10(angle)
+    angle.step = 0.001
+    angle.value = elem.angle
+    let pangle = document.createElement('input');
+    pangle.id = 'pangle'
+    pangle.setAttribute("onchange", "document.getElementById('angle').value = -(Math.log(this.value)-Math.log(2))/Math.log(2)")
+    pangle.className = 'setting'
+    pangle.type = 'number'
+
+    pangle.step = 0.01
+    pangle.value = elem.angle
+    let intensityLabel = document.createElement('p');
+    intensityLabel.className = 'setting-label'
+    intensityLabel.innerHTML = 'i'
+    let intensity = document.createElement('input');
+    intensity.id = 'intensity'
+    intensity.className = 'setting'
+    intensity.type = 'range'
+    intensity.min = 0
+    intensity.max = 1
+    intensity.step = 0.00001
+    intensity.value = elem.intensity
+    let penumbraLabel = document.createElement('p');
+    penumbraLabel.className = 'setting-label'
+    penumbraLabel.innerHTML = 'p'
+    let penumbra = document.createElement('input');
+    penumbra.id = 'penumbra'
+    penumbra.className = 'setting'
+    penumbra.type = 'range'
+    penumbra.min = 0
+    penumbra.max = 1
+    penumbra.step = 0.00001
+    penumbra.value = elem.penumbra
 
     let positionHeader = document.createElement('p');
     positionHeader.className = 'setting-header'
@@ -158,12 +196,15 @@ async function box(name){
     color.id = 'color'
     color.type = 'color'
     color.className = 'setting'
-    color.value = "#" + fullByte((Math.floor(elem.material.color.r * 255)).toString(16)) + fullByte((Math.floor(elem.material.color.g* 255)).toString(16)) + fullByte((Math.floor(elem.material.color.b* 255)).toString(16))
-    
+    color.value = "#" + fullByte((Math.floor(elem.color.r * 255)).toString(16)) + fullByte((Math.floor(elem.color.g* 255)).toString(16)) + fullByte((Math.floor(elem.color.b* 255)).toString(16))
+    let lhelp = document.createElement('input');
+    lhelp.id = 'helperToggle'
+    lhelp.type = 'checkbox'
+    lhelp.className = 'setting'
 
         settings.appendChild(named)
         settings.appendChild(xOut)
-
+        settings.appendChild(delButton)
         settings.appendChild(positionHeader)
 
         settings.appendChild(posXLabel)
@@ -176,16 +217,18 @@ async function box(name){
         settings.appendChild(posZ)
 
 
-        settings.appendChild(dimensionHeader)
+        settings.appendChild(miscHeader)
 
-        settings.appendChild(dimXLabel)
-        settings.appendChild(dimX)
+        settings.appendChild(angleLabel)
+        settings.appendChild(angle)
+        settings.appendChild(pangle)
 
-        settings.appendChild(dimYLabel)
-        settings.appendChild(dimY)
+        settings.appendChild(intensityLabel)
+        settings.appendChild(intensity)
 
-        settings.appendChild(dimZLabel)
-        settings.appendChild(dimZ)
+        settings.appendChild(penumbraLabel)
+        settings.appendChild(penumbra)
+
 
 
         settings.appendChild(rotationHeader)
@@ -202,22 +245,33 @@ async function box(name){
         settings.appendChild(colorHeader)
 
         settings.appendChild(color)
-    
+        settings.appendChild(lhelp)
 
-    setInterval(updateBoxProperties, 17, boxes, name)
+        if(!scene.getObjectByName(name + "-lhp")){ //-lighthelper
+            let spotLightHelper = new SpotLightHelper( scene.getObjectByName(name) );
+            spotLightHelper.name = name + "-lhp"
+            spotLightHelper.visible = false
+            scene.add( spotLightHelper );
+        }else{
+            scene.getObjectByName(name + "-lhp").visible = true
+        }
+
+    setInterval(updateLightProperties, 17, lights, name)
 
 }
 
-async function updateBoxProperties(boxes, name){
+async function updateLightProperties(lights, name){
     if (document.getElementById('settings-box').hasChildNodes){
         const container = document.getElementById('settings-box')
         if(document.getElementById(name)){
             
-                const boxName = document.getElementById(name).innerHTML;
-                window.currentName = boxName;
-                const dimX = document.getElementById('dimX').value;
-                const dimY = document.getElementById('dimY').value;
-                const dimZ = document.getElementById('dimZ').value;
+                const lightName = document.getElementById(name).innerHTML;
+                window.currentName = lightName;
+
+                const angle = document.getElementById('angle').value;
+                const pangle = document.getElementById('pangle').value;
+                const intensity = document.getElementById('intensity').value;
+                const penumbra = document.getElementById('penumbra').value;
                 
                 const posX = document.getElementById('posX').value;
                 const posY = document.getElementById('posY').value;
@@ -228,43 +282,42 @@ async function updateBoxProperties(boxes, name){
                 const rotZ = document.getElementById('rotZ').value;
 
                 const color = document.getElementById('color').value;
-            
-
-            
-
-            if (boxes[boxName]){
-                const prism = scene.getObjectByName(boxName);
-                prism.position.x = posX
-                prism.position.y = posY
-                prism.position.z = posZ
-
-                prism.rotation.x = rotX * 3.14/180 // scale to deg
-                prism.rotation.y = rotY * 3.14/180
-                prism.rotation.z = rotZ * 3.14/180 
-
-                prism.scale.x = dimX
-                prism.scale.y = dimY
-                prism.scale.z = dimZ
-
-                prism.material.color.r = parseInt(color.substr(1,2), 16) /255 // scale to flt
-                prism.material.color.g = parseInt(color.substr(3,2), 16) /255
-                prism.material.color.b = parseInt(color.substr(5,2), 16) /255
                 
-                //socket.emit('scene-change', scene, scene.getObjectByName(boxName));
-                /*
-                boxes[boxName].dimX = dimX
-                boxes[boxName].dimY = dimY
-                boxes[boxName].dimZ = dimZ
 
-                boxes[boxName].posX = posX
-                boxes[boxName].posY = posY
-                boxes[boxName].posZ = posZ
+            
 
-                boxes[boxName].rotX = rotX
-                boxes[boxName].rotY = rotY
-                boxes[boxName].rotZ = rotZ
+            if (lights[lightName]){
+                
+                let helper = scene.getObjectByName(name + "-lhp");
 
-                boxes[boxName].color = color */
+                const light = scene.getObjectByName(lightName);
+                light.position.x = posX
+                light.position.y = posY
+                light.position.z = posZ
+
+                light.target.position.x = rotX //* 3.14/180// scale to deg
+                light.target.position.y = rotY //* 3.14/180
+                light.target.position.z = rotZ //* 3.14/180
+
+                console.log(light.target.position.x, light.target.position.y, light.target.position.z, document.getElementById("angle").value, Math.log(document.getElementById("angle").value))
+                // light.rotation.x = (light.position.y-light.target.position.y)/(light.position.x-light.target.position.x)
+                // light.rotation.y = (light.position.x-light.target.position.x)/(light.position.z-light.target.position.z)
+                // light.rotation.z = (light.position.z-light.target.position.z)/(light.position.y-light.target.position.y)
+ 
+                light.angle = Math.pow(2, -angle+1)
+                angle.get
+                light.intensity = intensity
+                light.penumbra = penumbra
+                
+                light.color.r = parseInt(color.substr(1,2), 16) /255 // scale to flt
+                light.color.g = parseInt(color.substr(3,2), 16) /255
+                light.color.b = parseInt(color.substr(5,2), 16) /255
+                if(document.getElementById("helperToggle").checked){
+                    helper.update();
+                    helper.visible = true
+                }else{
+                    helper.visible = false
+                }
                 
             }
         }
@@ -273,12 +326,12 @@ async function updateBoxProperties(boxes, name){
 }
 
 
-function newBox(name){
+function newLight(name){
     if (name != ''){
-        let newBox = {};
-        newBox.name = name
-        boxes[name] = newBox;
-        box(name)
+        let newLight = {};
+        newLight.name = name
+        lights[name] = newLight;
+        light(name)
     }else{
         closeSettings();
     }
@@ -296,4 +349,4 @@ function fullByte(string){
 }
 
 
-export { newBox, closeSettings, clickSettingsBox, fullByte}
+export { newLight, fullByte}

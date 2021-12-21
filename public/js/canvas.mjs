@@ -1,4 +1,10 @@
 import { OrbitControls } from "./vendor/three/examples/jsm/controls/OrbitControls.js";
+import { OBJLoader } from "./vendor/three/examples/jsm/loaders/OBJLoader.js";
+import { MTLLoader } from "./vendor/three/examples/jsm/loaders/MTLLoader.js";
+import { DDSLoader } from "./vendor/three/examples/jsm/loaders/DDSLoader.js";
+
+
+
 
 import {
   Scene,
@@ -13,7 +19,10 @@ import {
   Vector2,
   MathUtils,
   ObjectLoader,
-  JSONLoader
+  JSONLoader,
+  TextureLoader,
+  SpotLightHelper,
+  LoadingManager
 } from "./vendor/three/build/three.module.js";
 import { fullByte, newBox } from "./boxFoundation.mjs";
 import { socket } from "./sockets.mjs";
@@ -22,49 +31,49 @@ import { socket } from "./sockets.mjs";
 
 // creating scene and socket shit
 let scene = new Scene();
-socket.emit('scene-get')
-socket.on('scene-update', (update) => {
-  console.log('upDEE')
+// socket.emit('scene-get')
+// socket.on('scene-update', (update) => {
+//   console.log('upDEE')
   
-  let newScene = new ObjectLoader().parse( JSON.parse(update) )
-  console.log(newScene, "\n up to date")
-  console.log(newScene.children.length)
-  for(let i = 0; i<newScene.children; i++){
+//   let newScene = new ObjectLoader().parse( JSON.parse(update) )
+//   console.log(newScene, "\n up to date")
+//   console.log(newScene.children.length)
+//   for(let i = 0; i<newScene.children; i++){
     
-    for(let e = 0; e<scene.children; e++){
-      console.log(scene.children[e].name)
-      if(scene.children[e].name == newScene.chilren[i]){
-        console.log('name', scene.children[e].name)
-        scene.children[e] = new ObjectLoader().parse( JSON.parse(newScene.children[i]))
+//     for(let e = 0; e<scene.children; e++){
+//       console.log(scene.children[e].name)
+//       if(scene.children[e].name == newScene.chilren[i]){
+//         console.log('name', scene.children[e].name)
+//         scene.children[e] = new ObjectLoader().parse( JSON.parse(newScene.children[i]))
         
-        if(scene.children[e].name == window.currentName){
-          updateDOM(scene.children[e])
-        }
-      }
+//         if(scene.children[e].name == window.currentName){
+//           updateDOM(scene.children[e])
+//         }
+//       }
       
-    }
+//     }
     
 
-  }
-})
-socket.on('scene-add', (update)=>{
-  let newScene = new ObjectLoader().parse( update )
-  for(let i = 0; i<newScene.children; i++){
-    scene.add(new ObjectLoader().parse( JSON.parse(newScene.children[i])));
+//   }
+// })
+// socket.on('scene-add', (update)=>{
+//   let newScene = new ObjectLoader().parse( update )
+//   for(let i = 0; i<newScene.children; i++){
+//     scene.add(new ObjectLoader().parse( JSON.parse(newScene.children[i])));
     
-  }
+//   }
   
-})
-socket.on('scene-return', (returnedScene)=>{
-  scene = new ObjectLoader().parse( returnedScene );
-  console.log(returnedScene)
-})
-let recievedScene;
-socket.on('fuck! an error happened!', ()=>{console.log('err')})
-socket.on('request-full-scene', ()=>{sceneSend(scene); console.log('full')})
-function sceneSend(scene){
-    socket.emit("full-scene", scene)
-}
+// })
+// socket.on('scene-return', (returnedScene)=>{
+//   scene = new ObjectLoader().parse( returnedScene );
+//   console.log(returnedScene)
+// })
+// let recievedScene;
+// socket.on('fuck! an error happened!', ()=>{console.log('err')})
+// socket.on('request-full-scene', ()=>{sceneSend(scene); console.log('full')})
+// function sceneSend(scene){
+//     socket.emit("full-scene", scene)
+// }
  
 
 // cam setup
@@ -80,7 +89,8 @@ const renderer = new WebGLRenderer();
 renderer.setPixelRatio( window.devicePixelRatio );
 const rendWidth = (window.innerWidth * 4) / 5
 const rendHeight = (window.innerHeight * 3) / 5
-renderer.setSize(rendWidth, rendHeight);
+document.getElementById("stage").width = rendWidth 
+document.getElementById("stage").height = rendHeight
 renderer.domElement.id = "canvas";
 renderer.domElement.className = "render";
 document.getElementById("stage").appendChild(renderer.domElement);
@@ -90,6 +100,8 @@ const canvas = document.getElementById("canvas");
 renderer.setClearColor("gray");
 // moving camera a bit
 camera.translateY(5);
+
+
 //adding starter cube
 /*
 var box = new BoxGeometry(1, 1, 1);
@@ -104,10 +116,43 @@ scene.add(cube);
 // adding default lighting for dev
 
 const lighter = new AmbientLight(0x404040);
-const otherl = new PointLight({ color: 0xf0f0f0 });
-console.log(otherl);
-scene.add(otherl);
 scene.add(lighter);
+
+var onProgress = function ( xhr ) {
+  if ( xhr.lengthComputable ) {
+    var percentComplete = xhr.loaded / xhr.total * 100;
+    console.log( Math.round(percentComplete, 2) + '% downloaded' );
+  }
+};
+
+var onError = function ( xhr ) { };
+
+var lm = new LoadingManager()
+lm.onStart = function ( url, itemsLoaded, itemsTotal ) {console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );};
+lm.onLoad = function ( ) {console.log( 'Loading complete!');};
+lm.onProgress = function ( url, itemsLoaded, itemsTotal ) {console.log( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );};
+lm.onError = function ( url ) {console.log( 'There was an error loading ' + url );};
+
+
+lm.addHandler( /\.dds$/i, new DDSLoader() )
+
+var mtlLoader = new MTLLoader(lm);
+//mtlLoader.setPath('/');
+mtlLoader.load('/Pac-Man.mtl', function(materials) {
+  materials.preload();
+  var objLoader = new OBJLoader(lm);
+  objLoader.setMaterials(materials);
+  //objLoader.setPath('/');
+  objLoader.load('/Pac-Man.obj', function(object) {
+    let scale = 0.1;
+    object.scale.x = scale
+    object.scale.y = scale
+    object.scale.z = scale
+    scene.add(object);
+
+    console.log("done", scene, object)
+  });
+});
 
 // controls for beaing able to look around
 const controls = new OrbitControls(camera, renderer.domElement);

@@ -31,6 +31,10 @@ function clickSettingsBox(){
 function createPrism(name){
     var box = new BoxGeometry(1, 1, 1);
     var mat = new MeshPhongMaterial({ color: "rgb(0, 0, 0)" });
+    if(name === "st"){
+        box = new BoxGeometry(40, 1, 40);
+        mat = new MeshPhongMaterial({ color: "rgb(255, 255, 255)" });
+    }
     var cube = new Mesh(box, mat);
     cube.name = name;
     cube.receiveShadow = true;
@@ -73,7 +77,11 @@ async function box(name){
     xOut.innerHTML = 'x'
     xOut.className = 'x-button'
     xOut.setAttribute('onclick', 'window.closeSettings()')
-    
+    let delButton = document.createElement('button')
+    delButton.id = 'recycle'
+    delButton.innerHTML = '♲'
+    delButton.className = 'recycling'
+    delButton.setAttribute('onclick', "window.deleteIt(scene.getObjectByName(document.getElementsByClassName('setting-object').item(0).id))")
     
     let dimensionHeader = document.createElement('p');
     dimensionHeader.innerHTML = "Dimensions"
@@ -177,6 +185,7 @@ async function box(name){
 
         settings.appendChild(named)
         settings.appendChild(xOut)
+        settings.appendChild(delButton)
 
         settings.appendChild(positionHeader)
 

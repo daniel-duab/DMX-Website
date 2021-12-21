@@ -8,28 +8,30 @@
         <script src="/socket.io/socket.io.js."></script>
         <script src="/js/canvas.mjs" type="module"></script>
         <script src="/js/boxFoundation.mjs" type="module"></script>
+        <script src="/js/lightFoundation.mjs" type="module"></script>
+        <script src="/js/sliderboard.mjs" type="module"></script>
         <script src="/js/other.mjs" type="module"></script>
         <script src="/js/sockets.mjs" type="module"></script>
         <script>
           
         </script>
         
-        <div class="stage" id="stage">
-        
-        </div>
+        <div class="stage" id="stage"></div>
+        <div class="sub-stage" id="sub-stage" ondblclick="switchView(this)" >text</div>
         <div class="menu-bar">
- 
-            
             <button onclick="newBox(document.getElementById('inBox').value)">Boxes</button>
-            <button>Lights</button>
+            <button onclick="newLight(document.getElementById('inBox').value)">Lights</button>
             <button>Cues</button>
             <button>Other</button>
-            <button id="favorite-1">Fav1</button>
+            <button id="slidos" onclick="">Slido</button>
             <button id="favorite-2">Fav2</button>
             <button id="favorite-3">Fav3</button>
             <button id="favorite-4">Fav4</button>
-            <input type="text" placeholder="name" id="inBox">
+            <input type="text" placeholder="name" id="inBox" autocomplete="off">
         </div>
+        <script>
+            
+        </script>
         <div class="title-bar">
 
         </div>
