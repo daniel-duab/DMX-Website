@@ -8,12 +8,23 @@ import {
     PointLight,
     AmbientLight,
     Float16BufferAttribute,
+    ReverseSubtractEquation,
   } from "./vendor/three/build/three.module.js";
 
 import {scene} from "./canvas.mjs"
 import {socket} from "./sockets.mjs"
 let boxes = {};
 
+function refreshBoxes(){
+    boxes = {}
+    for(let object of scene.children){
+        if(object.name){
+            if (object.type === "Mesh" && object.geometry.type === "BoxGeometry"){
+                boxes[object.name] = {"name": object.name}
+            }
+        }
+    }
+}
 
 function closeSettings(){
     clearInterval(updateBoxProperties);
@@ -255,7 +266,7 @@ async function updateBoxProperties(boxes, name){
 
             
 
-            if (boxes[boxName]){
+            if (boxes[boxName] && scene.getObjectByName(boxName)){
                 const prism = scene.getObjectByName(boxName);
                 prism.position.x = posX
                 prism.position.y = posY
@@ -317,6 +328,9 @@ function fullByte(string){
         return string;
     }
 }
+function getBoxes(){
+    return boxes;
+}
 
 
-export { newBox, closeSettings, clickSettingsBox, fullByte}
+export { newBox, closeSettings, clickSettingsBox, fullByte, boxes, refreshBoxes, getBoxes}

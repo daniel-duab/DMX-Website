@@ -29,7 +29,6 @@ var arduino;
 
 
 app.use(express.static(__dirname + "/public"))
-app.use(express.static(__dirname + "/pac"))
 
 
 
@@ -40,65 +39,47 @@ app.get('/', (req, res) => {
 
 
 io.on('connection', (socket) =>{
-  fs.readFile('./db/scene.json', (err, data)=>{
-    try{
-      socket.emit('scene-return', JSON.parse(data))
-    }catch{
-      socket.emit('fuck! an error happened!')
-    }
+  socket.on('load-scene', (name)=>{
+
+    let newScene;
+    let data = fs.readFileSync("./scenes.json", "utf8")
+    
+    let newScenes = JSON.parse(data)
+    newScene = newScenes.scenes[name]
+
+    socket.emit('load-scene-return', JSON.stringify(newScene), false)
+
   });
-  console.log(socket.id)
-    socket.on('scene-change', (obje)=>{
-      fs.readFile('./db/scene.json', 'utf8', (err, data)=>{
-        //get the data
-        try{
-        let update = JSON.parse(data);
-        //nav to actual scene
 
-        // iterate through childrem
-        let ifNew = true;
-        for (let i = 0; i<update.object.children.length; i++){
-          // set the child val to the updated sent val
-            let childName = update.object.children[i].name;
-            if (childName === obje.object.name){
-              update.object.children[i] = obje;
-              fs.writeFile('./db/scene.json', JSON.stringify(update), 'utf-8', (err)=>{console.log('oobj update')});
-              socket.broadcast.emit('scene-update', (update))
-              
-              ifNew = false
-            }else if(ifNew){
-              update.object.children[i] = obje;
-              
-              fs.writeFile('./db/scene.json', JSON.stringify(update), 'utf-8', (err)=>{console.log('nobj update')});
-              socket.broadcast.emit('scene-add', (update))
-              
-              
-            }
-            //write it back to json file
-            
-          }
-        }catch (errer){
+  socket.on('save-scene', (name, newSceneSTR)=>{
+    let newScene = JSON.parse(newSceneSTR)
+    let scenes = 'defual';
+    let data = fs.readFileSync("./scenes.json", "utf8" )
+    
+    //if (err) return reject(err);
+    scenes = JSON.parse(data)
+    scenes.scenes[name] = newScene
+    console.log(scenes)
+  
+    
+    console.log(scenes)
+    if (scenes!="defual") fs.writeFileSync("./scenes.json", JSON.stringify(scenes), (e)=>{console.log('suces')})
 
-          socket.emit('request-full-scene')
-          console.error(errer);
-        }
-      })
-    })
-    socket.on('full-scene', (scene)=>{
-      fs.writeFile('./db/scene.json', JSON.stringify(scene), 'utf-8', (err)=>{console.log('fs')});
-      io.emit('scene-update', JSON.stringify(scene))
-    });
-    socket.on('scene-get', ()=>{
-      fs.readFile('./db/scene.json', (err, data)=>{
-        try{
-          socket.emit('scene-return', JSON.parse(data))
-        }catch{
-          socket.emit('fuck! an error happened!')
-        }
-      });
-    });
+    socket.emit('save-scene-return', JSON.stringify(newScene), false)
+  });
+
 });
-
+function readScene(name, newScene) {
+  return new Promise((resolve, reject)=>{
+    fs.readFile("./scenes.json", "utf8", (err, data)=>{
+      //if (err) return reject(err);
+      scenes = JSON.parse(data)
+      scenes.scenes[name] = newScene
+      console.log(scenes)
+      resolve();
+    })
+  })
+} 
 
 function sendByte(byte){
     arduino.write(byte);

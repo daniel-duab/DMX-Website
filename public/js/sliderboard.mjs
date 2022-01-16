@@ -1,4 +1,4 @@
-import { renderer, camera } from "./canvas.mjs"
+import { renderer, camera, canvas } from "./canvas.mjs"
 
 
 function switchView(){
@@ -17,8 +17,6 @@ function switchView(){
         if (elem === subItem) sub.removeChild(elem)
     });
 
-    renderer.domElement.width = renderer.domElement.parentElement.clientWidth
-    renderer.domElement.height = renderer.domElement.parentElement.clientHeight
 
 }
 

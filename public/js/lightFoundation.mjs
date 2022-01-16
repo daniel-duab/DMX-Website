@@ -22,18 +22,26 @@ import {socket} from "./sockets.mjs"
 import { clickSettingsBox, closeSettings } from "./boxFoundation.mjs";
 let lights = {};
 
+function refreshLights(){
+    lights = {};
+    for(let object of scene.children){
+        if(object.name){
+            if (object.type === "SpotLight" ){
+                lights[object.name] = {"name": object.name}
+            }
+        }
+    }
+}
+
 function createLight(name){
     var light = new SpotLight();
     light.name = name;
-    light.receiveShadow = true;
     light.castShadow = true;
-    light.shadow.mapSize.width = 1024;
+    light.shadow.mapSize.width = 1024; 
     light.shadow.mapSize.height = 1024;
-
-    light.shadow.camera.near = 500;
-    light.shadow.camera.far = 4000;
-    light.shadow.camera.fov = 30;
-    light.castShadow = true;
+    light.shadow.camera.near = 0.5;
+    light.shadow.camera.far = 500; 
+    light.shadow.focus = 1;
     
     console.log(light);
     scene.add(light);
@@ -247,15 +255,6 @@ async function light(name){
         settings.appendChild(color)
         settings.appendChild(lhelp)
 
-        if(!scene.getObjectByName(name + "-lhp")){ //-lighthelper
-            let spotLightHelper = new SpotLightHelper( scene.getObjectByName(name) );
-            spotLightHelper.name = name + "-lhp"
-            spotLightHelper.visible = false
-            scene.add( spotLightHelper );
-        }else{
-            scene.getObjectByName(name + "-lhp").visible = true
-        }
-
     setInterval(updateLightProperties, 17, lights, name)
 
 }
@@ -286,11 +285,18 @@ async function updateLightProperties(lights, name){
 
             
 
-            if (lights[lightName]){
+            if (lights[lightName] && scene.getObjectByName(lightName)){
                 
-                let helper = scene.getObjectByName(name + "-lhp");
-
+                if(!scene.getObjectByName(lightName + "-lhp")){ //-lighthelper
+                    let spotLightHelper = new SpotLightHelper( scene.getObjectByName(lightName) );
+                    spotLightHelper.name = lightName + "-lhp"
+                    spotLightHelper.visible = true
+                    scene.add( spotLightHelper );
+                }
+                
+                const helper = scene.getObjectByName(lightName + '-lhp')
                 const light = scene.getObjectByName(lightName);
+
                 light.position.x = posX
                 light.position.y = posY
                 light.position.z = posZ
@@ -348,5 +354,8 @@ function fullByte(string){
     }
 }
 
+function getLights(){
+    return lights
+}
 
-export { newLight, fullByte}
+export { newLight, fullByte, lights, refreshLights, getLights}

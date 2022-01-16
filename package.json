@@ -4,7 +4,7 @@
   "description": "A means of controlling dmx lighting fixtures over wifi using a Raspberry pi and arduino using the DMXsimple library and communicating over i2c. The website is built on nodejs.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build-css": "tailwindcss build -i src/styles.css -o public/styles/styles.css"
   },
   "repository": {
     "type": "git",
@@ -25,6 +25,7 @@
     "socket.io": "^1.7.4",
     "socket.io-client": "^1.7.4",
     "socketio": "^1.0.0",
+    "tailwindcss": "^3.0.8",
     "three.js": "^0.77.0",
     "ts-node": "^10.4.0"
   },
