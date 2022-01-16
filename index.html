@@ -1,127 +1,51 @@
 <!DOCTYPE html>
 <html>
     <head>
-    <link rel="stylesheet" type="text/css" href="./slide.css">
-    <style>
-        .slide{
-            -webkit-appearance: slider-vertical;
-            height: 255px;
-            width: 8px;
-            float: left;
-        }
-    </style>
-    <style>
-        .titles{
-            display: inline-block;
-        }
-        .cont{
-            display: inline-block;
-        }
-    </style>
-    
+        <link rel="stylesheet" href="/styles/mainPage.css" type="text/css">
+        <link rel="stylesheet" href="/styles/boardSliders.css" type="text/css">
+
+        <script src="/styles/stylingHelper.js"></script>
     </head>
-<script src="/socket.io/socket.io.js"></script>
-    <body id="boo">
-        <!-- <input type="range" onmouseover="" onmouseout=""> -->
-        <button onclick="socket.emit('newBytes'); socket.emit('pause')">Update</button>
-        <!-- <button>Blackout</button> -->
-        <div id = 'lightboard'>
-            
+    <body class="basic-back">
+
+        <script src="/socket.io/socket.io.js."></script>
+        <script src="/js/canvas.mjs" type="module"></script>
+        <script src="/js/boxFoundation.mjs" type="module"></script>
+        <script src="/js/lightFoundation.mjs" type="module"></script>
+        <!-- <script src="/js/sliderboard.mjs" type="module"></script> -->
+        <script src="/js/other.mjs" type="module"></script>
+        <script src="/js/sockets.mjs" type="module"></script>
+        <script>
+          
+        </script>
+        
+        <div class="stage" id="stage"></div>
+        <div class="sub-stage" id="sub-stage" ondblclick="switchView(this)" >
             
         </div>
+        <div class="menu-bar">
+            <button onclick="newBox(document.getElementById('inBox').value)">Boxes</button>
+            <button onclick="newLight(document.getElementById('inBox').value)">Lights</button>
+            <button>Cues</button>
+            <button>Other</button>
+            <button id="slidos" onclick="">Slido</button>
+            <button id="save" onclick="saveScene()">save</button>
+            <button id="load" onclick="loadScene()">load</button>
+            <button id="favorite-4">Fav4</button>
+            <input type="text" placeholder="name" id="inBox" autocomplete="off">
+            <input type="checkbox" value="true" id="highlight-toggle">
+        </div>
         
-        <script>
+        <div class="title-bar">
+
+        </div>
+        <div class="settings-box" id="settings-box">
             
-            var nom, neccessary = 10;
-            var ll = []
-            var ll2 = []
-            var socket = io();
-            var idn;
-            var mouseDown = false;
-            socket.on('id', (idw)=>{
-                idn = idw;
 
-                console.log('id; ' + socket.id);
-                socket.emit('est', socket.id);
-            });
-            socket.on('sliders', (sliders)=>{
-                
-                //if (ids!==idn){
-                console.log('sliders');
-                if(sliders){
-                    var slidBox = "";
-                for (i=0; i<sliders.length; i++){
-                    
-                    slidBox+="<div class=\"cont\"><input ondragleave=\"mouseDown = false;\" ondragstart=\"mouseDown = true;\" class=\"slide\" orient=\"vertical\" min=\"0\" step=\"1\" max=\"255\" type=\"range\" value=\"" + sliders[i][2] + "\" id=\"" + sliders[i][0] + "\">" 
-                    slidBox+="<p class = \"titles\">" + sliders[i][0] + "<br>" + sliders[i][1] + "</p></div>"//"<p>" + sliders[i][2] + "</p>"
-                }
-                /*for (i=0; i<sliders.length; i++){
-                    slidBox+="<p class = \"titles\">" + sliders[i][0] + "</p><p>" + sliders[i][2] + "</p>"
-                }*/
-                document.getElementById('lightboard').innerHTML = slidBox
-            //}
-        }
-            });
-            socket.on('stop', ()=>{
-                neccessary = 100;
-            });
-
-            socket.on('nsliders', (sliders, ids)=>{
+        </div>
         
-                if (ids!==idn){
-                console.log('sliders');
-                if(sliders){
-                    var slidBox = "";
-                    for (i=0; i<sliders.length; i++){
-                    
-                    slidBox+="<div class=\"cont\"><input class=\"slide\" min=\"0\" max=\"255\" type=\"range\" value=\"" + sliders[i][2] + "\" id=\"" + sliders[i][0] + "\">" 
-                    slidBox+="<p class = \"titles\">" + sliders[i][0] + "<br>" + sliders[i][1] + "</p></div>"//"<p>" + sliders[i][2] + "</p>"
-                }
-                document.getElementById('lightboard').innerHTML = slidBox
-            
-            
-        }
-    }
-            });
-            
-            function updater(){
-                //console.log(mouseDown);
-                if (mouseDown){
-                ll2 = ll;
-                ll = [];
-                    for(i=0; i<document.getElementsByClassName('slide').length; i++){
-                        
-                        let v = document.getElementsByClassName('slide')[i].value
-                        ll.push(v);
-                        //console.log('i: '+i)
-                        var n = i
-                        
-                    if (ll[i]!=ll2[i]){
-                        
-                        socket.emit('updateSlider', [n, v, socket.id])
-                        //console.log('change')
-                    }
-                }
-                ll2[i] = ll[i];
-            
-                
-                    
-            }
-            setInterval(nec, 1);
-            }
-            document.addEventListener('mousedown', (e)=>{
-                mouseDown = true;
-            });
-            document.addEventListener('mouseup', (e)=>{
-                mouseDown = false;
-            });
-            document.addEventListener('touchstart', (e)=>{
-                mouseDown = true;
-            });
-            document.addEventListener('touchend', (e)=>{
-                mouseDown = false;
-            });
-            setInterval(updater, 100)
-        </script>
-        </body>
-    </html>
+
+
+
+    </body>
+</html>
